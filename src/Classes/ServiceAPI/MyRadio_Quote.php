@@ -73,6 +73,15 @@ class MyRadio_Quote extends ServiceAPI
             quote_id = $2
         ;';
 
+    const SEARCH_SQL = '
+        SELECT
+            quote_id
+        FROM
+            people.quote
+        WHERE
+            text ILIKE  \'%\' || $1 || \'%\'
+        ;';
+
     /**
      * The quote ID.
      * @var int
@@ -163,6 +172,18 @@ class MyRadio_Quote extends ServiceAPI
     public static function getAll()
     {
         $quote_ids = self::$db->fetchColumn(self::GET_ALL_SQL, []);
+
+        return array_map('self::getInstance', $quote_ids);
+    }
+
+    /**
+     * Retrieves quotes with text matching a search query.
+     *
+     * @return array An array of matching quotes.
+     */
+    public static function search($query)
+    {
+        $quote_ids = self::$db->fetchColumn(self::SEARCH_SQL, [$query]);
 
         return array_map('self::getInstance', $quote_ids);
     }
