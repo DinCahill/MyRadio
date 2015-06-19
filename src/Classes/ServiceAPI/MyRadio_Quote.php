@@ -82,6 +82,18 @@ class MyRadio_Quote extends ServiceAPI
             text ILIKE  \'%\' || $1 || \'%\'
         ;';
 
+    const RANDOM_SQL = '
+        SELECT
+            quote_id
+        FROM
+            people.quote
+        OFFSET
+            random() * (
+                SELECT COUNT(*) FROM people.quote
+            )
+        LIMIT 1
+        ;';
+
     /**
      * The quote ID.
      * @var int
@@ -140,7 +152,7 @@ class MyRadio_Quote extends ServiceAPI
     }
 
     /**
-     * Retrieves the quite with the given numeric ID.
+     * Retrieves the quote with the given numeric ID.
      *
      * @param $quote_id  The numeric ID of the quote.
      *
@@ -174,6 +186,18 @@ class MyRadio_Quote extends ServiceAPI
         $quote_ids = self::$db->fetchColumn(self::GET_ALL_SQL, []);
 
         return array_map('self::getInstance', $quote_ids);
+    }
+
+    /**
+     * Retrieves a random quote.
+     *
+     * @return Myradio_Quote A random quote
+     */
+    public static function random()
+    {
+        $rand_quote_id = self::$db->fetchOne(self::RANDOM_SQL, []);
+
+        return self::getInstance($rand_quote_id);
     }
 
     /**
