@@ -1,5 +1,4 @@
-# Add a recent Node repo
-curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
+#!/usr/bin/env sh
 # Base packages and Apache setup
 apt-get update
 apt-get install -y apache2 \
@@ -19,7 +18,6 @@ apt-get install -y apache2 \
 	php-mbstring \
 	openssl \
 	libav-tools \
-	nodejs \
 	zip \
 	unzip \
 	composer
@@ -40,11 +38,7 @@ EOF
 
 # Composer
 cd /vagrant
-su vagrant -c 'composer install'
-
-# Tools to run API tests
-npm install -g jasmine-node
-npm install --no-bin-links frisby
+su vagrant -c 'composer update'
 
 ln -s /vagrant/src /var/www/myradio
 ln -s /vagrant/sample_configs/apache.conf /etc/apache2/sites-available/myradio.conf
