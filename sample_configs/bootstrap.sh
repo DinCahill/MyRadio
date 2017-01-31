@@ -1,3 +1,4 @@
+set -eux
 # Add a recent Node repo
 curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
 # Base packages and Apache setup
@@ -40,7 +41,8 @@ EOF
 
 # Composer
 cd /vagrant
-su vagrant -c 'composer install'
+mkdir -p /vagrant/src/vendor
+composer install
 
 # Tools to run API tests
 npm install -g jasmine-node
