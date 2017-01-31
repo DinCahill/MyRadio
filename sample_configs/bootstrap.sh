@@ -21,7 +21,8 @@ apt-get install -y apache2 \
 	libav-tools \
 	nodejs \
 	zip \
-	unzip
+	unzip \
+	composer
 a2enmod ssl
 a2enmod rewrite
 service apache2 stop
@@ -38,10 +39,8 @@ xdebug.remote_handler=dbgp
 EOF
 
 # Composer
-curl -sS https://getcomposer.org/installer | php
-mv composer.phar /usr/local/bin/composer
 cd /vagrant
-composer install
+su vagrant -c 'composer install'
 
 # Tools to run API tests
 npm install -g jasmine-node
