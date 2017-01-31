@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+set -eux
 # Base packages and Apache setup
 apt-get update
 apt-get install -y apache2 \
@@ -38,6 +39,7 @@ EOF
 
 # Composer
 cd /vagrant
+mkdir -p /vagrant/src/vendor
 su vagrant -c 'composer update'
 
 ln -s /vagrant/src /var/www/myradio
@@ -78,8 +80,8 @@ su - postgres -c "cat /vagrant/sample_configs/postgres.sql | psql"
 service apache2 start
 
 # Somewhere to store audio uploads
-music_dirs=( "records" "membersmusic" "beds" "jingles" )
-for i in "${music_dirs[@]}"; do
+music_dirs="records membersmusic beds jingles"
+for i in ${music_dirs}; do # no quote here
 	mkdir -p /music/$i
 	chown www-data:www-data /music/$i
 done
